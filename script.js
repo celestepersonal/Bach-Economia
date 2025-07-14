@@ -26,7 +26,7 @@ const materias = [
   {codigo:"ECF416", nombre:"Econometría II", requisitos:["ECF408","ECF409","ECF411"], semestre:5},
   {codigo:"ECF417", nombre:"Macro economías abiertas", requisitos:["ECF413","ECF416"], semestre:6},
   {codigo:"ECF423", nombre:"Comercio internacional", requisitos:["ECF412","ECF413","ECF416"], semestre:6},
-  {codigo:"OPT1", nombre:"Optativa I", requisitos:[], semestre:6, requiereSemestres:[1,2,5,6]},
+  {codigo:"OPT1", nombre:"Optativa I (prefer finanzas)", requisitos:[], semestre:6, requiereSemestres:[1,2,5,6]},
   {codigo:"ECF420", nombre:"Economía ecológica", requisitos:["ECF414","ECF415"], semestre:6},
   {codigo:"ECF421", nombre:"Econometría III", requisitos:["ECF416"], semestre:6},
   {codigo:"ECF422", nombre:"Teorías del desarrollo", requisitos:[], semestre:7, requiereSemestres:[1,2,5,6]},
@@ -36,7 +36,7 @@ const materias = [
   {codigo:"OPT2", nombre:"Optativa II", requisitos:[], semestre:7, requiereSemestres:[1,2,5,6]},
   {codigo:"ECF425", nombre:"Temas desarrollo", requisitos:["ECF422"], semestre:8},
   {codigo:"ECF426", nombre:"Práctica profesional", requisitos:[], semestre:8, requiereSemestres:[1,2,3,4,5,6]},
-  {codigo:"ECF4500", nombre:"Optativa III (Taller)", requisitos:[], semestre:8, requiereSemestres:[5,6]},
+  {codigo:"ECF4500", nombre:"Optativa III (Taller invest)", requisitos:[], semestre:8, requiereSemestres:[5,6]},
   {codigo:"OPT3", nombre:"Optativa libre", requisitos:[], semestre:8},
   {codigo:"LIX2", nombre:"Inglés II", requisitos:["LIX"], semestre:8}
 ];
