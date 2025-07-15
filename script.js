@@ -1,38 +1,3 @@
-// LOGIN CON FIREBASE
-firebase.auth().onAuthStateChanged((user) => {
-  if (user) {
-    document.getElementById("login-container").style.display = "none";
-    document.getElementById("main").style.display = "block";
-    renderCourses();
-  } else {
-    document.getElementById("login-container").style.display = "block";
-    document.getElementById("main").style.display = "none";
-  }
-});
-
-function login() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-  firebase.auth().signInWithEmailAndPassword(email, password)
-    .catch(error => {
-      document.getElementById("error").textContent = error.message;
-    });
-}
-
-function register() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-  firebase.auth().createUserWithEmailAndPassword(email, password)
-    .catch(error => {
-      document.getElementById("error").textContent = error.message;
-    });
-}
-
-function logout() {
-  firebase.auth().signOut();
-}
-
-// Datos de los semestres y cursos
 const semesters = {
   1: ["EGC", "EGS", "ECF400", "LIX", "MAT001"],
   2: ["ECF", "EGA", "ECF402", "ECF403", "MAT002"],
@@ -45,20 +10,20 @@ const semesters = {
 };
 
 const courses = {
-  EGC: { name: "Estudios Generales Ciencias", req: [] },
-  EGS: { name: "Estudios Generales Sociales", req: [] },
-  ECF400: { name: "Introducción a la Economía I", req: [] },
+  EGC: { name: "Est. Generales Ciencias", req: [] },
+  EGS: { name: "Est. Generales Sociales", req: [] },
+  ECF400: { name: "Intro a la Economía I", req: [] },
   LIX: { name: "Inglés Integrado I", req: [] },
   MAT001: { name: "Matemática General", req: [] },
-  ECF: { name: "Estudios Generales Filosofía", req: [] },
-  EGA: { name: "Estudios Generales Artes", req: [] },
-  ECF402: { name: "Introducción a la Economía II", req: ["ECF400"] },
+  ECF: { name: "Est. Generales Filosofía", req: [] },
+  EGA: { name: "Est. Generales Artes", req: [] },
+  ECF402: { name: "Intro a la Economía II", req: ["ECF400"] },
   ECF403: { name: "Estadística I", req: ["ECF400", "MAT001"] },
   MAT002: { name: "Cálculo I", req: ["MAT001"] },
   ECF404: { name: "Microeconomía I", req: ["ECF400", "MAT002"] },
   ECF405: { name: "Macroeconomía I", req: ["ECF402", "MAT002"] },
   ECF406: { name: "Economía Política", req: ["ECF402", "MAT001"] },
-  MAT050: { name: "Cálculo II para Economía", req: ["MAT002"] },
+  MAT050: { name: "Cálculo II", req: ["MAT002"] },
   ECF407: { name: "Estadística II", req: ["ECF403", "MAT002"] },
   ECF408: { name: "Microeconomía II", req: ["ECF404", "MAT002"] },
   ECF409: { name: "Macroeconomía II", req: ["ECF405", "MAT002"] },
@@ -70,92 +35,107 @@ const courses = {
   ECF414: { name: "Economía Política III", req: ["ECF410"] },
   ECF415: { name: "Economía Ambiental", req: ["ECF408", "ECF411"] },
   ECF416: { name: "Econometría II", req: ["ECF408", "ECF409", "ECF411"] },
-  ECF417: { name: "Macroeconomía de economías abiertas", req: ["ECF413", "ECF416"] },
+  ECF417: { name: "Macroecon. Abiertas", req: ["ECF413", "ECF416"] },
   ECF423: { name: "Comercio Internacional", req: ["ECF412", "ECF413", "ECF416"] },
   OPT1: { name: "Optativa Disciplinar I", req: [] },
   ECF420: { name: "Economía Ecológica", req: ["ECF414", "ECF415"] },
   ECF421: { name: "Econometría III", req: ["ECF416"] },
   ECF422: { name: "Teorías del Desarrollo", req: [] },
   ECF418: { name: "Evaluación de Proyectos", req: [] },
-  ECF424: { name: "Economía del Sector Público", req: [] },
+  ECF424: { name: "Economía Sector Público", req: [] },
   ECF419: { name: "Modelos Multisectoriales", req: ["ECF423"] },
   OPT2: { name: "Optativa Disciplinar II", req: [] },
-  ECF425: { name: "Temas de Economía del Desarrollo", req: ["ECF422"] },
-  ECF426: { name: "Práctica Profesional Supervisada", req: [] },
-  ECF4500: { name: "Taller de Investigación", req: [] },
+  ECF425: { name: "Temas Eco Desarrollo", req: ["ECF422"] },
+  ECF426: { name: "Práctica Profesional", req: [] },
+  ECF4500: { name: "Taller Investigación", req: [] },
   OPT3: { name: "Optativa Libre IV", req: [] },
   LIX2: { name: "Inglés Integrado II", req: ["LIX"] }
 };
 
-// Estado guardado en localStorage
-const state = JSON.parse(localStorage.getItem("estadoCursos") || "{}");
+const state = JSON.parse(localStorage.getItem("estadoCursosNotas") || "{}");
 const grid = document.getElementById("grid");
 
-function canTakeCourse(code) {
-  const course = courses[code];
-  return course.req.every(reqCode => state[reqCode]);
+function canTake(code) {
+  return courses[code].req.every(req => state[req] !== undefined && state[req] >= 7);
 }
 
 function renderCourses() {
   grid.innerHTML = "";
+
   for (const [sem, codes] of Object.entries(semesters)) {
     const semesterDiv = document.createElement("div");
     semesterDiv.className = "semester";
-
     const title = document.createElement("h2");
     title.textContent = `${sem}° Semestre`;
+    const container = document.createElement("div");
+    container.className = "courses";
 
-    const courseContainer = document.createElement("div");
-    courseContainer.className = "courses";
+    let total = 0;
+    let count = 0;
 
     for (const code of codes) {
       const course = courses[code];
       const div = document.createElement("div");
       div.className = "course";
-      div.id = code;
-      div.textContent = course.name;
+      let display = course.name;
 
-      if (state[code]) {
-        div.classList.add("approved");
-      } else if (canTakeCourse(code)) {
+      if (state[code] !== undefined) {
+        const note = state[code];
+        display += ` (${note})`;
+        if (note >= 7) {
+          div.classList.add("approved");
+          total += note;
+          count++;
+        } else {
+          div.classList.add("failed");
+        }
+      } else if (canTake(code)) {
         div.classList.add("available");
       } else {
         div.classList.add("locked");
       }
 
-      // Click para aprobar materia
+      div.textContent = display;
+
       div.addEventListener("click", () => {
-        if (!canTakeCourse(code)) return;
-        if (!state[code]) {
-          state[code] = true;
-          localStorage.setItem("estadoCursos", JSON.stringify(state));
-          renderCourses();
+        if (!canTake(code)) return;
+
+        const input = prompt(`Ingrese nota del curso "${course.name}" (1-10):`);
+        if (!input) return;
+
+        const nota = Math.round(Number(input));
+        if (isNaN(nota) || nota < 1 || nota > 10) {
+          alert("Nota inválida. Debe estar entre 1 y 10.");
+          return;
         }
+
+        state[code] = nota;
+        localStorage.setItem("estadoCursosNotas", JSON.stringify(state));
+        renderCourses();
       });
 
-      // Doble click para desaprobar materia
-      div.addEventListener("dblclick", (e) => {
-        e.preventDefault();
-        if (state[code]) {
-          // Verificar si materia es prerequisito de otras aprobadas
-          const isPrereqOfApproved = Object.entries(courses).some(([cCode, cData]) => {
-            return cData.req.includes(code) && state[cCode];
-          });
-          if (isPrereqOfApproved) {
-            alert("No puedes desaprobar esta materia porque es prerequisito de una materia aprobada.");
-            return;
-          }
-          delete state[code];
-          localStorage.setItem("estadoCursos", JSON.stringify(state));
-          renderCourses();
-        }
+      div.addEventListener("dblclick", () => {
+        delete state[code];
+        localStorage.setItem("estadoCursosNotas", JSON.stringify(state));
+        renderCourses();
       });
 
-      courseContainer.appendChild(div);
+      container.appendChild(div);
     }
 
     semesterDiv.appendChild(title);
-    semesterDiv.appendChild(courseContainer);
+    semesterDiv.appendChild(container);
+
+    if (count > 0) {
+      const avg = Math.round(total / count);
+      const avgText = document.createElement("div");
+      avgText.className = "semester-average";
+      avgText.textContent = `Promedio: ${avg}`;
+      semesterDiv.appendChild(avgText);
+    }
+
     grid.appendChild(semesterDiv);
   }
 }
+
+renderCourses();
