@@ -1,156 +1,129 @@
-const materias = [
-  {codigo:"EGC", nombre:"Estudios generales Ciencias", requisitos: [], semestre:1},
-  {codigo:"EGS", nombre:"Estudios generales Sociales", requisitos: [], semestre:1},
-  {codigo:"ECF400", nombre:"Introducción a la Economía I", requisitos: [], semestre:1},
-  {codigo:"LIX", nombre:"Inglés integrado I", requisitos: [], semestre:1},
-  {codigo:"MAT001", nombre:"Matemática General", requisitos: [], semestre:1},
-  {codigo:"ECF", nombre:"Filosofía", requisitos: [], semestre:2},
-  {codigo:"EGA", nombre:"Artes", requisitos: [], semestre:2},
-  {codigo:"ECF402", nombre:"Intro Economía II", requisitos:["ECF400"], semestre:2},
-  {codigo:"ECF403", nombre:"Estadística I", requisitos:["ECF400","MAT001"], semestre:2},
-  {codigo:"MAT002", nombre:"Cálculo I", requisitos:["MAT001"], semestre:2},
-  {codigo:"ECF404", nombre:"Micro I", requisitos:["ECF400","MAT002"], semestre:3},
-  {codigo:"ECF405", nombre:"Macro I", requisitos:["ECF402","MAT002"], semestre:3},
-  {codigo:"ECF406", nombre:"Economía Política", requisitos:["ECF402","MAT001"], semestre:3},
-  {codigo:"MAT050", nombre:"Cálculo II", requisitos:["MAT002"], semestre:3},
-  {codigo:"ECF407", nombre:"Estadística II", requisitos:["ECF403","MAT002"], semestre:3},
-  {codigo:"ECF408", nombre:"Micro II", requisitos:["ECF404","MAT002"], semestre:4},
-  {codigo:"ECF409", nombre:"Macro II", requisitos:["ECF405","MAT002"], semestre:4},
-  {codigo:"ECF410", nombre:"Econ Política II", requisitos:["ECF406"], semestre:4},
-  {codigo:"MAT005", nombre:"Álgebra Lineal", requisitos:["MAT002"], semestre:4},
-  {codigo:"ECF411", nombre:"Econometría I", requisitos:["MAT050","ECF404","ECF405","ECF406","MAT005"], semestre:4},
-  {codigo:"ECF412", nombre:"Micro III", requisitos:["ECF408","MAT050"], semestre:5},
-  {codigo:"ECF413", nombre:"Macro III", requisitos:["ECF409","MAT050"], semestre:5},
-  {codigo:"ECF414", nombre:"Econ Política III", requisitos:["ECF410"], semestre:5},
-  {codigo:"ECF415", nombre:"Econ Ambiental", requisitos:["ECF408","ECF411"], semestre:5},
-  {codigo:"ECF416", nombre:"Econometría II", requisitos:["ECF408","ECF409","ECF411"], semestre:5},
-  {codigo:"ECF417", nombre:"Macro economías abiertas", requisitos:["ECF413","ECF416"], semestre:6},
-  {codigo:"ECF423", nombre:"Comercio internacional", requisitos:["ECF412","ECF413","ECF416"], semestre:6},
-  {codigo:"OPT1", nombre:"Optativa I (prefer finanzas)", requisitos:[], semestre:6, requiereSemestres:[1,2,5,6]},
-  {codigo:"ECF420", nombre:"Economía ecológica", requisitos:["ECF414","ECF415"], semestre:6},
-  {codigo:"ECF421", nombre:"Econometría III", requisitos:["ECF416"], semestre:6},
-  {codigo:"ECF422", nombre:"Teorías del desarrollo", requisitos:[], semestre:7, requiereSemestres:[1,2,5,6]},
-  {codigo:"ECF418", nombre:"Evaluación de proyectos", requisitos:[], semestre:7, requiereSemestres:[1,2,5,6]},
-  {codigo:"ECF424", nombre:"Economía sector público", requisitos:[], semestre:7, requiereSemestres:[1,2,5,6]},
-  {codigo:"ECF419", nombre:"Modelos multisectoriales", requisitos:["ECF423"], semestre:7},
-  {codigo:"OPT2", nombre:"Optativa II", requisitos:[], semestre:7, requiereSemestres:[1,2,5,6]},
-  {codigo:"ECF425", nombre:"Temas desarrollo", requisitos:["ECF422"], semestre:8},
-  {codigo:"ECF426", nombre:"Práctica profesional", requisitos:[], semestre:8, requiereSemestres:[1,2,3,4,5,6]},
-  {codigo:"ECF4500", nombre:"Optativa III (Taller invest)", requisitos:[], semestre:8, requiereSemestres:[5,6]},
-  {codigo:"OPT3", nombre:"Optativa libre", requisitos:[], semestre:8},
-  {codigo:"LIX2", nombre:"Inglés II", requisitos:["LIX"], semestre:8}
-];
-
-const optativasDisponibles = [
-  "Taller de investigación", "Economía espacial", "Desarrollo económico mundial",
-  "Planificación financiera", "Economía de regulación", "Economía política de la globalización",
-  "Métodos de valoración ambiental", "Análisis financiero"
-];
-
-let aprobadas = JSON.parse(localStorage.getItem("aprobadas")) || [];
-let optativasTomadas = JSON.parse(localStorage.getItem("optativas")) || [];
-
-function guardar() {
-  localStorage.setItem("aprobadas", JSON.stringify(aprobadas));
-  localStorage.setItem("optativas", JSON.stringify(optativasTomadas));
-}
-
-function semestreAprobado(n) {
-  const materiasSem = materias.filter(m => m.semestre === n);
-  return materiasSem.every(m => aprobadas.includes(m.codigo));
-}
-
-function puedeDesbloquear(materia) {
-  const requisitos = materia.requisitos || [];
-  const semestres = materia.requiereSemestres || [];
-  return requisitos.every(cod => aprobadas.includes(cod)) &&
-         semestres.every(n => semestreAprobado(n));
-}
-
-function aprobarMateria(codigo) {
-  if (!aprobadas.includes(codigo)) {
-    const materia = materias.find(m => m.codigo === codigo);
-    if (!puedeDesbloquear(materia)) return false;
-    aprobadas.push(codigo);
-    guardar();
-    crearMalla();
-    return true;
+// LOGIN CON FIREBASE
+firebase.auth().onAuthStateChanged((user) => {
+  if (user) {
+    document.getElementById("login-container").style.display = "none";
+    document.getElementById("main").style.display = "block";
+    renderCourses();
+  } else {
+    document.getElementById("login-container").style.display = "block";
+    document.getElementById("main").style.display = "none";
   }
-  return false;
+});
+
+function login() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  firebase.auth().signInWithEmailAndPassword(email, password)
+    .catch(error => {
+      document.getElementById("error").textContent = error.message;
+    });
 }
 
-function desaprobarMateria(codigo) {
-  if (aprobadas.includes(codigo)) {
-    aprobadas = aprobadas.filter(c => c !== codigo);
-    guardar();
-    crearMalla();
-  }
+function register() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  firebase.auth().createUserWithEmailAndPassword(email, password)
+    .catch(error => {
+      document.getElementById("error").textContent = error.message;
+    });
 }
 
-function crearMalla() {
-  const cont = document.getElementById("malla");
-  cont.innerHTML = "";
+// PLAN DE ESTUDIOS INTERACTIVO
+const semesters = {
+  1: ["EGC", "EGS", "ECF400", "LIX", "MAT001"],
+  2: ["ECF", "EGA", "ECF402", "ECF403", "MAT002"],
+  3: ["ECF404", "ECF405", "ECF406", "MAT050", "ECF407"],
+  4: ["ECF408", "ECF409", "ECF410", "MAT005", "ECF411"],
+  5: ["ECF412", "ECF413", "ECF414", "ECF415", "ECF416"],
+  6: ["ECF417", "ECF423", "OPT1", "ECF420", "ECF421"],
+  7: ["ECF422", "ECF418", "ECF424", "ECF419", "OPT2"],
+  8: ["ECF425", "ECF426", "ECF4500", "OPT3", "LIX2"]
+};
 
-  for (let i = 1; i <= 8; i++) {
-    const sem = document.createElement("div");
-    sem.className = "semestre";
-    sem.innerHTML = `<h2>Semestre ${i}</h2>`;
+const courses = {
+  EGC: { name: "Estudios Generales Ciencias", req: [] },
+  EGS: { name: "Estudios Generales Sociales", req: [] },
+  ECF400: { name: "Introducción a la Economía I", req: [] },
+  LIX: { name: "Inglés Integrado I", req: [] },
+  MAT001: { name: "Matemática General", req: [] },
+  ECF: { name: "Estudios Generales Filosofía", req: [] },
+  EGA: { name: "Estudios Generales Artes", req: [] },
+  ECF402: { name: "Introducción a la Economía II", req: ["ECF400"] },
+  ECF403: { name: "Estadística I", req: ["ECF400", "MAT001"] },
+  MAT002: { name: "Cálculo I", req: ["MAT001"] },
+  ECF404: { name: "Microeconomía I", req: ["ECF400", "MAT002"] },
+  ECF405: { name: "Macroeconomía I", req: ["ECF402", "MAT002"] },
+  ECF406: { name: "Economía Política", req: ["ECF402", "MAT001"] },
+  MAT050: { name: "Cálculo II para Economía", req: ["MAT002"] },
+  ECF407: { name: "Estadística II", req: ["ECF403", "MAT002"] },
+  ECF408: { name: "Microeconomía II", req: ["ECF404", "MAT002"] },
+  ECF409: { name: "Macroeconomía II", req: ["ECF405", "MAT002"] },
+  ECF410: { name: "Economía Política II", req: ["ECF406"] },
+  MAT005: { name: "Álgebra Lineal", req: ["MAT002"] },
+  ECF411: { name: "Econometría I", req: ["MAT050", "ECF404", "ECF405", "ECF406"] },
+  ECF412: { name: "Microeconomía III", req: ["ECF408", "MAT050"] },
+  ECF413: { name: "Macroeconomía III", req: ["ECF409", "MAT050"] },
+  ECF414: { name: "Economía Política III", req: ["ECF410"] },
+  ECF415: { name: "Economía Ambiental", req: ["ECF408", "ECF411"] },
+  ECF416: { name: "Econometría II", req: ["ECF408", "ECF409", "ECF411"] },
+  ECF417: { name: "Macroeconomía de economías abiertas", req: ["ECF413", "ECF416"] },
+  ECF423: { name: "Comercio Internacional", req: ["ECF412", "ECF413", "ECF416"] },
+  OPT1: { name: "Optativa Disciplinar I", req: [] },
+  ECF420: { name: "Economía Ecológica", req: ["ECF414", "ECF415"] },
+  ECF421: { name: "Econometría III", req: ["ECF416"] },
+  ECF422: { name: "Teorías del Desarrollo", req: [] },
+  ECF418: { name: "Evaluación de Proyectos", req: [] },
+  ECF424: { name: "Economía del Sector Público", req: [] },
+  ECF419: { name: "Modelos Multisectoriales", req: ["ECF423"] },
+  OPT2: { name: "Optativa Disciplinar II", req: [] },
+  ECF425: { name: "Temas de Economía del Desarrollo", req: ["ECF422"] },
+  ECF426: { name: "Práctica Profesional Supervisada", req: [] },
+  ECF4500: { name: "Taller de Investigación", req: [] },
+  OPT3: { name: "Optativa Libre IV", req: [] },
+  LIX2: { name: "Inglés Integrado II", req: ["LIX"] }
+};
 
-    materias.filter(m => m.semestre === i).forEach(m => {
-      const btn = document.createElement("div");
-      btn.className = "materia";
+const state = JSON.parse(localStorage.getItem("estadoCursos") || "{}");
+const grid = document.getElementById("grid");
 
-      const aprobada = aprobadas.includes(m.codigo);
-      const desbloqueada = puedeDesbloquear(m);
+function renderCourses() {
+  grid.innerHTML = "";
+  for (const [sem, codes] of Object.entries(semesters)) {
+    const semesterDiv = document.createElement("div");
+    semesterDiv.className = "semester";
+    const title = document.createElement("h2");
+    title.textContent = `${sem}° Semestre`;
+    const courseContainer = document.createElement("div");
+    courseContainer.className = "courses";
 
-      if (aprobada) {
-        btn.classList.add("aprobada");
-      } else if (desbloqueada) {
-        btn.classList.add("activa");
+    for (const code of codes) {
+      const course = courses[code];
+      const div = document.createElement("div");
+      div.className = "course";
+      div.id = code;
+      div.textContent = course.name;
+
+      const unmetReqs = course.req.filter(r => !state[r]);
+      if (unmetReqs.length > 0) {
+        div.classList.add("locked");
+      } else if (state[code]) {
+        div.classList.add("approved");
       } else {
-        btn.classList.add("bloqueada");
+        div.classList.add("available");
       }
 
-      btn.textContent = `${m.codigo} - ${m.nombre}`;
-      btn.onclick = () => aprobarMateria(m.codigo);
-      btn.ondblclick = () => desaprobarMateria(m.codigo);
+      div.addEventListener("click", () => {
+        if (unmetReqs.length > 0) return;
+        state[code] = !state[code];
+        localStorage.setItem("estadoCursos", JSON.stringify(state));
+        renderCourses();
+      });
 
-      sem.appendChild(btn);
-    });
-
-    cont.appendChild(sem);
-  }
-
-  crearOptativas();
-}
-
-function crearOptativas() {
-  const cont = document.getElementById("optativas");
-  if (!cont) return;
-
-  cont.innerHTML = "";
-
-  optativasDisponibles.forEach(opt => {
-    const box = document.createElement("div");
-    box.className = "optativa";
-    box.textContent = opt;
-
-    if (optativasTomadas.includes(opt)) {
-      box.classList.add("seleccionada");
+      courseContainer.appendChild(div);
     }
 
-    box.onclick = () => {
-      if (optativasTomadas.includes(opt)) {
-        optativasTomadas = optativasTomadas.filter(o => o !== opt);
-      } else {
-        optativasTomadas.push(opt);
-      }
-      guardar();
-      crearOptativas();
-    };
-
-    cont.appendChild(box);
-  });
+    semesterDiv.appendChild(title);
+    semesterDiv.appendChild(courseContainer);
+    grid.appendChild(semesterDiv);
+  }
 }
-
-crearMalla();
