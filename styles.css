@@ -1,3 +1,46 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #e0f7fa;
+  margin: 0;
+  padding: 2rem;
+}
+
+h1 {
+  text-align: center;
+  color: #6a5acd; /* morado pastel */
+  margin-bottom: 1rem;
+}
+
+#grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.semester {
+  background: #fff;
+  border: 2px solid #b19cd9; /* morado pastel */
+  border-radius: 12px;
+  padding: 1rem;
+  width: 300px;
+  box-shadow: 0 0 10px rgba(177, 156, 217, 0.4);
+  display: flex;
+  flex-direction: column;
+}
+
+.semester h2 {
+  color: #6a5acd;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.courses {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
 .course {
   padding: 0.6rem 1rem;
   border-radius: 8px;
@@ -40,4 +83,23 @@
 .course.failed {
   background-color: #f7c6ce; /* rosa pastel */
   color: #7a414f;
+}
+
+.semester-average {
+  text-align: center;
+  font-weight: bold;
+  margin-top: 0.8rem;
+  color: #333;
+}
+
+.optativas {
+  background: #fff;
+  border: 2px solid #b19cd9;
+  border-radius: 12px;
+  padding: 1rem;
+  width: 300px;
+  box-shadow: 0 0 10px rgba(177, 156, 217, 0.4);
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
 }
