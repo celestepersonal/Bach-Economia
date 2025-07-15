@@ -45,29 +45,47 @@ h1 {
   cursor: pointer;
   font-weight: bold;
   font-size: 0.9rem;
-  text-align: center;
+  text-align: left;
   color: white;
   user-select: none;
+  display: flex;
+  align-items: center;
   transition: background-color 0.3s;
 }
 
+.course span {
+  user-select: none;
+}
+
+/* Código de materia: columna fija */
+.course > span:first-child {
+  font-weight: bold;
+  margin-right: 0.8rem;
+  min-width: 65px;
+  display: inline-block;
+  text-align: left;
+}
+
+/* Estados con colores pastel */
 .course.locked {
-  background-color: #cccccc;
+  background-color: #dcdcdc; /* gris pastel */
   cursor: not-allowed;
-  color: #666;
+  color: #666666;
 }
 
 .course.available {
-  background-color: #00bcd4; /* celeste */
+  background-color: #80deea; /* celeste pastel */
+  color: #004d40;
 }
 
 .course.approved {
-  background-color: #6a1b9a; /* morado */
+  background-color: #b39ddb; /* morado pastel */
+  color: #311b92;
 }
 
 .course.failed {
-  background-color: #f8bbd0; /* rosa claro */
-  color: #4b0033;
+  background-color: #f8bbd0; /* rosa pastel */
+  color: #880e4f;
 }
 
 .semester-average {
