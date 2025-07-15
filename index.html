@@ -2,15 +2,45 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Bach-Economia</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bach-Economia-UNA</title>
   <link rel="stylesheet" href="styles.css" />
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAgYWu4iFfufkqWb8nzFmerpRTTQRZ3A-4",
+      authDomain: "bach-economia.firebaseapp.com",
+      projectId: "bach-economia",
+      storageBucket: "bach-economia.firebasestorage.app",
+      messagingSenderId: "254167750567",
+      appId: "1:254167750567:web:6c0bcefb8c8d9b2d33c882"
+    };
+    firebase.initializeApp(firebaseConfig);
+  </script>
 </head>
 <body>
-  <h1>Bach-Economia</h1>
-  <div id="malla" class="malla"></div>
-  <h2 class="optativas-titulo">Optativas disponibles</h2>
-  <div id="optativas" class="optativas"></div>
+  <!-- Pantalla de inicio de sesión -->
+  <div id="login-container">
+    <h2>Iniciar sesión</h2>
+    <input type="email" id="email" placeholder="Correo">
+    <input type="password" id="password" placeholder="Contraseña">
+    <div class="login-buttons">
+      <button onclick="login()">Entrar</button>
+      <button onclick="register()">Registrarse</button>
+    </div>
+    <p id="error" style="color: red;"></p>
+  </div>
+
+  <!-- App principal (plan de estudios) -->
+  <div id="main" style="display: none;">
+    <h1>Bach-Economia-UNA</h1>
+    <div id="grid"></div>
+  </div>
+
   <script src="script.js"></script>
 </body>
 </html>
