@@ -7,7 +7,7 @@ body {
 
 h1, h2 {
   text-align: center;
-  color: #007acc;
+  color: #4b0082; /* Morado oscuro */
   margin-bottom: 1rem;
 }
 
@@ -52,3 +52,80 @@ h1, h2 {
 
 #login-container button:hover {
   background-color: #005fa3;
+}
+
+/* BOTÓN CERRAR SESIÓN */
+#logout-btn {
+  display: block;
+  margin: 0 auto 1.5rem auto;
+  background-color: #40e0d0; /* Turquesa */
+  color: #003333;
+  font-style: italic;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1.2rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#logout-btn:hover {
+  background-color: #30cfcf;
+}
+
+/* GRID SEMESTRES */
+#grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.semester {
+  background: #fafafa;
+  border: 2px solid #4b0082;
+  border-radius: 12px;
+  padding: 1rem;
+  width: 280px;
+  box-shadow: 0 0 10px rgba(75, 0, 130, 0.2);
+}
+
+.semester h2 {
+  color: #4b0082;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.courses {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.course {
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  color: white;
+  user-select: none;
+  transition: background-color 0.3s, color 0.3s;
+  font-weight: bold;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* Estados de las materias */
+.course.locked {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+}
+
+.course.available {
+  background-color: #7b68ee; /* morado medio */
+}
+
+.course.approved {
+  background-color: #4b0082; /* morado oscuro */
+  text-decoration: underline;
+}
