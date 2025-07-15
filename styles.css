@@ -5,75 +5,12 @@ body {
   padding: 2rem;
 }
 
-h1, h2 {
+h1 {
   text-align: center;
-  color: #4b0082; /* Morado oscuro */
+  color: #4b0082;
   margin-bottom: 1rem;
 }
 
-/* LOGIN ESTÉTICA */
-#login-container {
-  max-width: 400px;
-  margin: 4rem auto;
-  padding: 2rem;
-  background-color: #ffffff;
-  border: 2px solid #90caf9;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-#login-container input {
-  display: block;
-  width: 100%;
-  margin-bottom: 1rem;
-  padding: 0.75rem;
-  border: 1px solid #90caf9;
-  border-radius: 8px;
-  font-size: 1rem;
-}
-
-.login-buttons {
-  display: flex;
-  justify-content: space-between;
-}
-
-#login-container button {
-  flex: 1;
-  padding: 0.75rem;
-  margin: 0 0.25rem;
-  background-color: #007acc;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-#login-container button:hover {
-  background-color: #005fa3;
-}
-
-/* BOTÓN CERRAR SESIÓN */
-#logout-btn {
-  display: block;
-  margin: 0 auto 1.5rem auto;
-  background-color: #40e0d0; /* Turquesa */
-  color: #003333;
-  font-style: italic;
-  font-weight: bold;
-  border: none;
-  border-radius: 8px;
-  padding: 0.6rem 1.2rem;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-#logout-btn:hover {
-  background-color: #30cfcf;
-}
-
-/* GRID SEMESTRES */
 #grid {
   display: flex;
   flex-wrap: wrap;
@@ -82,11 +19,11 @@ h1, h2 {
 }
 
 .semester {
-  background: #fafafa;
+  background: #fff;
   border: 2px solid #4b0082;
   border-radius: 12px;
   padding: 1rem;
-  width: 280px;
+  width: 300px;
   box-shadow: 0 0 10px rgba(75, 0, 130, 0.2);
 }
 
@@ -99,33 +36,43 @@ h1, h2 {
 .courses {
   display: flex;
   flex-direction: column;
-  gap: 0.7rem;
+  gap: 0.6rem;
 }
 
 .course {
-  padding: 0.8rem 1rem;
+  padding: 0.6rem 1rem;
   border-radius: 8px;
   cursor: pointer;
-  color: white;
-  user-select: none;
-  transition: background-color 0.3s, color 0.3s;
   font-weight: bold;
   font-size: 0.9rem;
   text-align: center;
+  color: white;
+  user-select: none;
+  transition: background-color 0.3s;
 }
 
-/* Estados de las materias */
 .course.locked {
-  background-color: #ccc;
-  color: #666;
+  background-color: #cccccc;
   cursor: not-allowed;
+  color: #666;
 }
 
 .course.available {
-  background-color: #7b68ee; /* morado medio */
+  background-color: #00bcd4; /* celeste */
 }
 
 .course.approved {
-  background-color: #4b0082; /* morado oscuro */
-  text-decoration: underline;
+  background-color: #6a1b9a; /* morado */
+}
+
+.course.failed {
+  background-color: #f8bbd0; /* rosa claro */
+  color: #4b0033;
+}
+
+.semester-average {
+  text-align: center;
+  font-weight: bold;
+  margin-top: 0.8rem;
+  color: #333;
 }
