@@ -28,7 +28,11 @@ function register() {
     });
 }
 
-// PLAN DE ESTUDIOS INTERACTIVO
+function logout() {
+  firebase.auth().signOut();
+}
+
+// Datos de los semestres y cursos
 const semesters = {
   1: ["EGC", "EGS", "ECF400", "LIX", "MAT001"],
   2: ["ECF", "EGA", "ECF402", "ECF403", "MAT002"],
@@ -83,16 +87,24 @@ const courses = {
   LIX2: { name: "Inglés Integrado II", req: ["LIX"] }
 };
 
+// Estado guardado en localStorage
 const state = JSON.parse(localStorage.getItem("estadoCursos") || "{}");
 const grid = document.getElementById("grid");
+
+function canTakeCourse(code) {
+  const course = courses[code];
+  return course.req.every(reqCode => state[reqCode]);
+}
 
 function renderCourses() {
   grid.innerHTML = "";
   for (const [sem, codes] of Object.entries(semesters)) {
     const semesterDiv = document.createElement("div");
     semesterDiv.className = "semester";
+
     const title = document.createElement("h2");
     title.textContent = `${sem}° Semestre`;
+
     const courseContainer = document.createElement("div");
     courseContainer.className = "courses";
 
@@ -103,20 +115,40 @@ function renderCourses() {
       div.id = code;
       div.textContent = course.name;
 
-      const unmetReqs = course.req.filter(r => !state[r]);
-      if (unmetReqs.length > 0) {
-        div.classList.add("locked");
-      } else if (state[code]) {
+      if (state[code]) {
         div.classList.add("approved");
-      } else {
+      } else if (canTakeCourse(code)) {
         div.classList.add("available");
+      } else {
+        div.classList.add("locked");
       }
 
+      // Click para aprobar materia
       div.addEventListener("click", () => {
-        if (unmetReqs.length > 0) return;
-        state[code] = !state[code];
-        localStorage.setItem("estadoCursos", JSON.stringify(state));
-        renderCourses();
+        if (!canTakeCourse(code)) return;
+        if (!state[code]) {
+          state[code] = true;
+          localStorage.setItem("estadoCursos", JSON.stringify(state));
+          renderCourses();
+        }
+      });
+
+      // Doble click para desaprobar materia
+      div.addEventListener("dblclick", (e) => {
+        e.preventDefault();
+        if (state[code]) {
+          // Verificar si materia es prerequisito de otras aprobadas
+          const isPrereqOfApproved = Object.entries(courses).some(([cCode, cData]) => {
+            return cData.req.includes(code) && state[cCode];
+          });
+          if (isPrereqOfApproved) {
+            alert("No puedes desaprobar esta materia porque es prerequisito de una materia aprobada.");
+            return;
+          }
+          delete state[code];
+          localStorage.setItem("estadoCursos", JSON.stringify(state));
+          renderCourses();
+        }
       });
 
       courseContainer.appendChild(div);
