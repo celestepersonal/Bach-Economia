@@ -1,44 +1,3 @@
-body {
-  font-family: Arial, sans-serif;
-  background: #e0f7fa;
-  margin: 0;
-  padding: 2rem;
-}
-
-h1 {
-  text-align: center;
-  color: #4b0082;
-  margin-bottom: 1rem;
-}
-
-#grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1rem;
-}
-
-.semester {
-  background: #fff;
-  border: 2px solid #4b0082;
-  border-radius: 12px;
-  padding: 1rem;
-  width: 300px;
-  box-shadow: 0 0 10px rgba(75, 0, 130, 0.2);
-}
-
-.semester h2 {
-  color: #4b0082;
-  text-align: center;
-  margin-bottom: 1rem;
-}
-
-.courses {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-}
-
 .course {
   padding: 0.6rem 1rem;
   border-radius: 8px;
@@ -49,48 +8,36 @@ h1 {
   color: white;
   user-select: none;
   display: flex;
+  gap: 10px;
   align-items: center;
   transition: background-color 0.3s;
 }
 
-.course span {
-  user-select: none;
-}
-
-/* Código de materia: columna fija */
-.course > span:first-child {
-  font-weight: bold;
-  margin-right: 0.8rem;
-  min-width: 65px;
-  display: inline-block;
+.code-span {
+  min-width: 70px;
+  font-family: monospace;
+  font-weight: bolder;
   text-align: left;
 }
 
-/* Estados con colores pastel */
+/* Colores pastel */
 .course.locked {
-  background-color: #dcdcdc; /* gris pastel */
+  background-color: #d7d7d7; /* gris pastel */
   cursor: not-allowed;
-  color: #666666;
+  color: #888;
 }
 
 .course.available {
-  background-color: #80deea; /* celeste pastel */
-  color: #004d40;
+  background-color: #a0d8ef; /* celeste pastel */
+  color: #034d69;
 }
 
 .course.approved {
-  background-color: #b39ddb; /* morado pastel */
-  color: #311b92;
+  background-color: #b19cd9; /* morado pastel */
+  color: #3f2e60;
 }
 
 .course.failed {
-  background-color: #f8bbd0; /* rosa pastel */
-  color: #880e4f;
-}
-
-.semester-average {
-  text-align: center;
-  font-weight: bold;
-  margin-top: 0.8rem;
-  color: #333;
+  background-color: #f7c6ce; /* rosa pastel */
+  color: #7a414f;
 }
