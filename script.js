@@ -52,11 +52,37 @@ const courses = {
   LIX2: { name: "Inglés Integrado II", req: ["LIX"] }
 };
 
+const optativas = new Set(["OPT1", "OPT2", "OPT3"]);
+
 const state = JSON.parse(localStorage.getItem("estadoCursosNotas") || "{}");
 const grid = document.getElementById("grid");
 
+function semestreAprobado(sem) {
+  const codes = semesters[sem];
+  let aprobados = 0;
+  for (const code of codes) {
+    if (state[code] >= 7) aprobados++;
+  }
+  return aprobados >= 3;
+}
+
+function puedeAcceder(sem) {
+  if (sem < 6) return true;
+  if (sem === 6) return [1,2,3,4].every(s => semestreAprobado(s));
+  if (sem === 7) return [1,2,3,4,5].every(s => semestreAprobado(s));
+  if (sem === 8) return [1,2,3,4,5,6].every(s => semestreAprobado(s));
+  return false;
+}
+
 function canTake(code) {
-  return courses[code].req.every(req => state[req] !== undefined && state[req] >= 7);
+  if (optativas.has(code)) return true;
+  if (!courses[code].req.every(req => state[req] !== undefined && state[req] >= 7)) return false;
+  for (const [sem, codes] of Object.entries(semesters)) {
+    if (codes.includes(code)) {
+      return puedeAcceder(Number(sem));
+    }
+  }
+  return false;
 }
 
 function renderCourses() {
@@ -65,37 +91,51 @@ function renderCourses() {
   for (const [sem, codes] of Object.entries(semesters)) {
     const semesterDiv = document.createElement("div");
     semesterDiv.className = "semester";
+
     const title = document.createElement("h2");
     title.textContent = `${sem}° Semestre`;
+    semesterDiv.appendChild(title);
+
     const container = document.createElement("div");
     container.className = "courses";
 
     let total = 0;
     let count = 0;
 
-    for (const code of codes) {
+    codes.forEach(code => {
       const course = courses[code];
       const div = document.createElement("div");
       div.className = "course";
-      let display = course.name;
+
+      const codeSpan = document.createElement("span");
+      codeSpan.textContent = code;
+
+      const nameSpan = document.createElement("span");
+      nameSpan.textContent = course.name;
+
+      div.appendChild(codeSpan);
+      div.appendChild(nameSpan);
 
       if (state[code] !== undefined) {
         const note = state[code];
-        display += ` (${note})`;
+        nameSpan.textContent += ` (${note})`;
+
         if (note >= 7) {
           div.classList.add("approved");
+          codeSpan.classList.add("approved");
           total += note;
           count++;
         } else {
           div.classList.add("failed");
+          codeSpan.classList.add("failed");
         }
       } else if (canTake(code)) {
         div.classList.add("available");
+        codeSpan.classList.add("available");
       } else {
         div.classList.add("locked");
+        codeSpan.classList.add("locked");
       }
-
-      div.textContent = display;
 
       div.addEventListener("click", () => {
         if (!canTake(code)) return;
@@ -121,9 +161,8 @@ function renderCourses() {
       });
 
       container.appendChild(div);
-    }
+    });
 
-    semesterDiv.appendChild(title);
     semesterDiv.appendChild(container);
 
     if (count > 0) {
