@@ -1,93 +1,54 @@
 body {
   font-family: Arial, sans-serif;
-  background-color: #f0f8ff;
-  padding: 20px;
-  color: #333;
+  background: #e0f7fa;
   margin: 0;
+  padding: 2rem;
 }
+
 h1, h2 {
   text-align: center;
-  color: #006494;
-  margin-bottom: 20px;
+  color: #007acc;
+  margin-bottom: 1rem;
 }
-.malla {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
+
+/* LOGIN ESTÉTICA */
+#login-container {
+  max-width: 400px;
+  margin: 4rem auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border: 2px solid #90caf9;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
-.semestre {
-  border: 2px solid #b3dfff;
-  border-radius: 10px;
-  padding: 15px;
-  width: 300px;
-  background-color: #e6f7ff;
-  box-sizing: border-box;
-}
-.semestre h2 {
-  margin-top: 0;
-  color: #006494;
-}
-.materia {
-  user-select: none;
+
+#login-container input {
   display: block;
-  margin: 8px 0;
-  padding: 10px;
-  font-weight: bold;
-  text-align: center;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border: 1px solid #a0cfff;
-  color: #297ab7;
-  background-color: #e0f4ff;
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  border: 1px solid #90caf9;
+  border-radius: 8px;
+  font-size: 1rem;
 }
-.materia.bloqueada {
-  background-color: #e0f4ff;
-  color: #297ab7;
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-.materia.activa {
-  background-color: #c7e4ff;
-  color: #125a9c;
-  cursor: pointer;
-}
-.materia.aprobada {
-  background-color: #d7c3f2;
-  color: #5a009d;
-  font-weight: bolder;
-  cursor: pointer;
-}
-.optativas-titulo {
-  margin-top: 40px;
-  color: #006494;
-}
-.optativas {
+
+.login-buttons {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px;
-  padding: 20px;
-  box-sizing: border-box;
+  justify-content: space-between;
 }
-.optativa {
-  padding: 10px 14px;
-  background-color: #f5fcff;
-  border: 1px solid #87cfff;
-  border-radius: 6px;
+
+#login-container button {
+  flex: 1;
+  padding: 0.75rem;
+  margin: 0 0.25rem;
+  background-color: #007acc;
+  color: white;
+  border: none;
+  border-radius: 8px;
   font-weight: bold;
-  color: #004b87;
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
-  user-select: none;
+  transition: background 0.3s;
 }
-.optativa.seleccionada {
-  background-color: #d7c3f2;
-  color: #5a009d;
-}
-@media (max-width: 700px) {
-  .semestre {
-    width: 100%;
-  }
-}
+
+#login-container button:hover {
+  background-color: #005fa3;
