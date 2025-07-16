@@ -1,3 +1,5 @@
+// === SCRIPT COMPLETO CON MODAL DE NOTAS Y PROMEDIO ===
+
 const materias = [
   {codigo:"EGC", nombre:"Estudios generales Ciencias", requisitos: [], semestre:1},
   {codigo:"EGS", nombre:"Estudios generales Sociales", requisitos: [], semestre:1},
@@ -49,10 +51,13 @@ const optativasDisponibles = [
 
 let aprobadas = JSON.parse(localStorage.getItem("aprobadas")) || [];
 let optativasTomadas = JSON.parse(localStorage.getItem("optativas")) || [];
+let notas = JSON.parse(localStorage.getItem("notasCursos")) || {};
+let cursoSeleccionado = null;
 
 function guardar() {
   localStorage.setItem("aprobadas", JSON.stringify(aprobadas));
   localStorage.setItem("optativas", JSON.stringify(optativasTomadas));
+  localStorage.setItem("notasCursos", JSON.stringify(notas));
 }
 
 function semestreAprobado(n) {
@@ -67,24 +72,11 @@ function puedeDesbloquear(materia) {
          semestres.every(n => semestreAprobado(n));
 }
 
-function aprobarMateria(codigo) {
-  if (!aprobadas.includes(codigo)) {
-    const materia = materias.find(m => m.codigo === codigo);
-    if (!puedeDesbloquear(materia)) return false;
-    aprobadas.push(codigo);
-    guardar();
-    crearMalla();
-    return true;
-  }
-  return false;
-}
-
 function desaprobarMateria(codigo) {
-  if (aprobadas.includes(codigo)) {
-    aprobadas = aprobadas.filter(c => c !== codigo);
-    guardar();
-    crearMalla();
-  }
+  aprobadas = aprobadas.filter(c => c !== codigo);
+  delete notas[codigo];
+  guardar();
+  crearMalla();
 }
 
 function crearMalla() {
@@ -96,27 +88,50 @@ function crearMalla() {
     sem.className = "semestre";
     sem.innerHTML = `<h2>Semestre ${i}</h2>`;
 
-    materias.filter(m => m.semestre === i).forEach(m => {
+    const materiasSem = materias.filter(m => m.semestre === i);
+
+    let total = 0, count = 0;
+
+    materiasSem.forEach(m => {
       const btn = document.createElement("div");
       btn.className = "materia";
 
-      const aprobada = aprobadas.includes(m.codigo);
+      const nota = notas[m.codigo];
       const desbloqueada = puedeDesbloquear(m);
 
-      if (aprobada) {
+      if (nota !== undefined) {
+        btn.textContent = `${m.codigo} - ${m.nombre} (${nota})`;
+      } else {
+        btn.textContent = `${m.codigo} - ${m.nombre}`;
+      }
+
+      if (nota >= 7) {
         btn.classList.add("aprobada");
+        if (!aprobadas.includes(m.codigo)) aprobadas.push(m.codigo);
+        total += nota;
+        count++;
+      } else if (nota && nota < 7) {
+        btn.classList.add("reprobada");
       } else if (desbloqueada) {
         btn.classList.add("activa");
       } else {
         btn.classList.add("bloqueada");
       }
 
-      btn.textContent = `${m.codigo} - ${m.nombre}`;
-      btn.onclick = () => aprobarMateria(m.codigo);
+      btn.onclick = () => desbloqueada ? abrirModal(m.codigo) : null;
       btn.ondblclick = () => desaprobarMateria(m.codigo);
 
       sem.appendChild(btn);
     });
+
+    const promedio = document.createElement("p");
+    promedio.style.textAlign = "center";
+    promedio.style.fontWeight = "bold";
+    promedio.style.marginTop = "0.5rem";
+    promedio.textContent = count > 0
+      ? `Promedio aprobado: ${(total / count).toFixed(2)}`
+      : `Sin materias aprobadas`;
+    sem.appendChild(promedio);
 
     cont.appendChild(sem);
   }
@@ -151,6 +166,40 @@ function crearOptativas() {
 
     cont.appendChild(box);
   });
+}
+
+function abrirModal(codigo) {
+  cursoSeleccionado = codigo;
+  const input = document.getElementById("nota-input");
+  const titulo = document.getElementById("modal-titulo");
+  const materia = materias.find(m => m.codigo === codigo);
+  titulo.textContent = `Ingrese la nota de ${materia.nombre}`;
+  input.value = notas[codigo] || "";
+  document.getElementById("nota-modal").style.display = "flex";
+}
+
+function cerrarModal() {
+  document.getElementById("nota-modal").style.display = "none";
+  cursoSeleccionado = null;
+}
+
+function guardarNota() {
+  const input = parseFloat(document.getElementById("nota-input").value.replace(",", "."));
+  if (isNaN(input) || input < 1 || input > 10) {
+    alert("Nota inválida. Debe estar entre 1 y 10.");
+    return;
+  }
+
+  notas[cursoSeleccionado] = input;
+  if (input >= 7) {
+    if (!aprobadas.includes(cursoSeleccionado)) aprobadas.push(cursoSeleccionado);
+  } else {
+    aprobadas = aprobadas.filter(c => c !== cursoSeleccionado);
+  }
+
+  guardar();
+  cerrarModal();
+  crearMalla();
 }
 
 crearMalla();
