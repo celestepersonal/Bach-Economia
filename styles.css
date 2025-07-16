@@ -1,105 +1,93 @@
 body {
   font-family: Arial, sans-serif;
-  background: #e0f7fa;
+  background-color: #f0f8ff;
+  padding: 20px;
+  color: #333;
   margin: 0;
-  padding: 2rem;
 }
-
-h1 {
+h1, h2 {
   text-align: center;
-  color: #6a5acd; /* morado pastel */
-  margin-bottom: 1rem;
+  color: #006494;
+  margin-bottom: 20px;
 }
-
-#grid {
+.malla {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+.semestre {
+  border: 2px solid #b3dfff;
+  border-radius: 10px;
+  padding: 15px;
+  width: 300px;
+  background-color: #e6f7ff;
+  box-sizing: border-box;
+}
+.semestre h2 {
+  margin-top: 0;
+  color: #006494;
+}
+.materia {
+  user-select: none;
+  display: block;
+  margin: 8px 0;
+  padding: 10px;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid #a0cfff;
+  color: #297ab7;
+  background-color: #e0f4ff;
+}
+.materia.bloqueada {
+  background-color: #e0f4ff;
+  color: #297ab7;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+.materia.activa {
+  background-color: #c7e4ff;
+  color: #125a9c;
+  cursor: pointer;
+}
+.materia.aprobada {
+  background-color: #d7c3f2;
+  color: #5a009d;
+  font-weight: bolder;
+  cursor: pointer;
+}
+.optativas-titulo {
+  margin-top: 40px;
+  color: #006494;
+}
+.optativas {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 1rem;
+  gap: 12px;
+  padding: 20px;
+  box-sizing: border-box;
 }
-
-.semester {
-  background: #fff;
-  border: 2px solid #b19cd9; /* morado pastel */
-  border-radius: 12px;
-  padding: 1rem;
-  width: 300px;
-  box-shadow: 0 0 10px rgba(177, 156, 217, 0.4);
-  display: flex;
-  flex-direction: column;
-}
-
-.semester h2 {
-  color: #6a5acd;
-  text-align: center;
-  margin-bottom: 1rem;
-}
-
-.courses {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-}
-
-.course {
-  padding: 0.6rem 1rem;
-  border-radius: 8px;
+.optativa {
+  padding: 10px 14px;
+  background-color: #f5fcff;
+  border: 1px solid #87cfff;
+  border-radius: 6px;
+  font-weight: bold;
+  color: #004b87;
   cursor: pointer;
-  font-weight: bold;
-  font-size: 0.9rem;
-  text-align: left;
-  color: white;
+  transition: background-color 0.3s ease, color 0.3s ease;
   user-select: none;
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  transition: background-color 0.3s;
 }
-
-.code-span {
-  min-width: 70px;
-  font-family: monospace;
-  font-weight: bolder;
-  text-align: left;
+.optativa.seleccionada {
+  background-color: #d7c3f2;
+  color: #5a009d;
 }
-
-/* Colores pastel */
-.course.locked {
-  background-color: #d7d7d7; /* gris pastel */
-  cursor: not-allowed;
-  color: #888;
-}
-
-.course.available {
-  background-color: #a0d8ef; /* celeste pastel */
-  color: #034d69;
-}
-
-.course.approved {
-  background-color: #b19cd9; /* morado pastel */
-  color: #3f2e60;
-}
-
-.course.failed {
-  background-color: #f7c6ce; /* rosa pastel */
-  color: #7a414f;
-}
-
-.semester-average {
-  text-align: center;
-  font-weight: bold;
-  margin-top: 0.8rem;
-  color: #333;
-}
-
-.optativas {
-  background: #fff;
-  border: 2px solid #b19cd9;
-  border-radius: 12px;
-  padding: 1rem;
-  width: 300px;
-  box-shadow: 0 0 10px rgba(177, 156, 217, 0.4);
-  margin-top: 1rem;
-  display: flex;
-  flex-direction: column;
+@media (max-width: 700px) {
+  .semestre {
+    width: 100%;
+  }
 }
