@@ -12,5 +12,17 @@
   <h2 class="optativas-titulo">Optativas disponibles</h2>
   <div id="optativas" class="optativas"></div>
   <script src="script.js"></script>
+  <!-- Modal para ingresar nota -->
+<div id="nota-modal" class="modal">
+  <div class="modal-content">
+    <h3 id="modal-title">Ingrese su nota</h3>
+    <input type="number" id="nota-input" min="1" max="10" step="0.01">
+    <div class="modal-buttons">
+      <button onclick="guardarNota()">Guardar</button>
+      <button onclick="cerrarModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
